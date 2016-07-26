@@ -9,19 +9,17 @@ using Androbot.Properties;
 using Androbot.Androbot.Events;
 using Androbot.Androbot.Data.Sensors;
 using Androbot.Androbot.Data.GeoLocation;
-using System.Runtime.InteropServices;
 using StereoScopic;
-using System.Drawing.Drawing2D;
 
 // Inspiration for the maps.
 // https://developers.google.com/maps/documentation/static-maps/intro#Markers
 
 // TODO: Add kyboard event handler.
 // TODO: Add the whole command set of the carel robot.
-// TODO: Add library to 3Dfy the camera image.
 // TODO: Add circular diagram for the sensor.
 // TODO: Log4Net READ MF.
 // TODO: Add LORA API layer.
+// TODO: iRobot package learn.
 
 namespace Androbot
 {
@@ -54,6 +52,8 @@ namespace Androbot
         /// Output processed image.
         /// </summary>
         private Bitmap outputImage;
+
+        private MotionMode motionMode = MotionMode.Positional;
 
         #endregion
 
@@ -98,10 +98,12 @@ namespace Androbot
             this.CaptureRobotCamera(1);
         }
 
+
         private void btnSpeak_Click(object sender, EventArgs e)
         {
             this.MakeRobotSpeak(this.tbTextToSpeak.Text);
         }
+
 
         private void btnGetGeoLocation_Click(object sender, EventArgs e)
         {
@@ -118,30 +120,64 @@ namespace Androbot
             this.StopRobotLocation();
         }
 
+
         private void btnStop_Click(object sender, EventArgs e)
         {
-
+            this.MoveRobot((Button)sender, 0, 0);
         }
 
-        private void btnBackward_Click(object sender, EventArgs e)
+        private void btnForward_MouseDown(object sender, MouseEventArgs e)
         {
-
+            this.MoveRobot((Button)sender, 50, 50);
         }
 
-        private void btnLeft_Click(object sender, EventArgs e)
+        private void btnRight_MouseDown(object sender, MouseEventArgs e)
         {
-
+            this.RotateRobot((Button)sender, 50, -50);
         }
 
-        private void btnForward_Click(object sender, EventArgs e)
+        private void btnBackward_MouseDown(object sender, MouseEventArgs e)
         {
-            this.MoveRobot();
+            this.MoveRobot((Button)sender, -50, -50);
         }
 
-        private void btnRight_Click(object sender, EventArgs e)
+        private void btnLeft_MouseDown(object sender, MouseEventArgs e)
         {
-
+            this.RotateRobot((Button)sender, -50, 50);
         }
+
+        private void btnForward_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.motionMode == MotionMode.Speed)
+            {
+                this.MoveRobot((Button)sender, 0, 0);
+            }
+        }
+
+        private void btnRight_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.motionMode == MotionMode.Speed)
+            {
+                this.RotateRobot((Button)sender, 0, 0);
+            }
+        }
+
+        private void btnBackward_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.motionMode == MotionMode.Speed)
+            {
+                this.MoveRobot((Button)sender, 0, 0);
+            }
+        }
+
+        private void btnLeft_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (this.motionMode == MotionMode.Speed)
+            {
+                this.RotateRobot((Button)sender, 0, 0);
+            }
+        }
+
 
         private void btnStartSeonsors_Click(object sender, EventArgs e)
         {
@@ -157,6 +193,7 @@ namespace Androbot
         {
             this.GetRobotSensors();
         }
+
 
         private void btn3Dfy_Click(object sender, EventArgs e)
         {
@@ -242,6 +279,54 @@ namespace Androbot
 
         }
 
+        private void GenerateChrtData()
+        {
+            // Inspiration ...
+            // http://stackoverflow.com/questions/10622674/chart-creating-dynamically-in-net-c-sharp
+
+            this.crtMagVectors.Series.Clear();
+
+            Series seriesX = new System.Windows.Forms.DataVisualization.Charting.Series
+            {
+                Name = "X",
+                Color = System.Drawing.Color.Green,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Line
+            };
+
+            Series seriesY = new System.Windows.Forms.DataVisualization.Charting.Series
+            {
+                Name = "Y",
+                Color = System.Drawing.Color.Red,
+                IsVisibleInLegend = false,
+                IsXValueIndexed = true,
+                ChartType = SeriesChartType.Line
+            };
+
+            this.crtMagVectors.Series.Add(seriesX);
+            this.crtMagVectors.Series.Add(seriesY);
+
+            for (int i = 0; i < 100; i++)
+            {
+                seriesX.Points.AddXY(i, fX(i));
+                seriesY.Points.AddXY(i, fY(i));
+            }
+
+            this.crtMagVectors.Invalidate();
+        }
+
+        private double fX(int i)
+        {
+            var f1 = 59894 - (8128 * i) + (262 * i * i) - (1.6 * i * i * i);
+            return f1;
+        }
+        private double fY(int i)
+        {
+            var f1 = 1 - (8128 * i) + (262 * i * i) - (1.6 * i * i * i);
+            return f1;
+        }
+
         #endregion
 
         #region Robot
@@ -296,58 +381,6 @@ namespace Androbot
             {
                 // TODO: Log the error.
             }
-        }
-
-        private void MoveRobot()
-        {
-            if (this.robot == null)
-            {
-                return;
-            }
-
-            Thread worker = new Thread(new ThreadStart(
-                delegate ()
-                {
-                    try
-                    {
-                        //
-                        if (this.btnForward.InvokeRequired)
-                        {
-                            this.btnForward.BeginInvoke((MethodInvoker)delegate ()
-                            {
-                                this.btnForward.Enabled = false;
-                            });
-                        }
-                        else
-                        {
-                            this.btnForward.Enabled = false;
-                        }
-
-                        // 
-                        this.robot.Move(1.0D, 1.0D);
-
-                        // 
-                        if (this.btnForward.InvokeRequired)
-                        {
-                            this.btnForward.BeginInvoke((MethodInvoker)delegate ()
-                            {
-                                this.btnForward.Enabled = true;
-                            });
-                        }
-                        else
-                        {
-                            this.btnForward.Enabled = true;
-                        }
-
-                    }
-                    catch (Exception exception)
-                    {
-                        // TODO: Log the error.
-                    }
-                }));
-
-            worker.Start();
-
         }
 
         private void MakeRobotSpeak(string text)
@@ -792,6 +825,108 @@ namespace Androbot
             worker.Start();
         }
 
+        private void MoveRobot(Button button, float left, float right)
+        {
+            if (this.robot == null)
+            {
+                return;
+            }
+
+            Thread worker = new Thread(new ThreadStart(
+                delegate ()
+                {
+                    try
+                    {
+                        //
+                        if (button.InvokeRequired)
+                        {
+                            button.BeginInvoke((MethodInvoker)delegate ()
+                            {
+                                button.Enabled = false;
+                            });
+                        }
+                        else
+                        {
+                            button.Enabled = false;
+                        }
+
+                        // 
+                        this.robot.Move(left, right);
+
+                        // 
+                        if (button.InvokeRequired)
+                        {
+                            button.BeginInvoke((MethodInvoker)delegate ()
+                            {
+                                button.Enabled = true;
+                            });
+                        }
+                        else
+                        {
+                            button.Enabled = true;
+                        }
+
+                    }
+                    catch (Exception exception)
+                    {
+                        // TODO: Log the error.
+                    }
+                }));
+
+            worker.Start();
+        }
+
+        private void RotateRobot(Button button, float left, float right)
+        {
+            if (this.robot == null)
+            {
+                return;
+            }
+
+            Thread worker = new Thread(new ThreadStart(
+                delegate ()
+                {
+                    try
+                    {
+                        //
+                        if (button.InvokeRequired)
+                        {
+                            button.BeginInvoke((MethodInvoker)delegate ()
+                            {
+                                button.Enabled = false;
+                            });
+                        }
+                        else
+                        {
+                            button.Enabled = false;
+                        }
+
+                        // 
+                        this.robot.Rotate(left, right);
+
+                        // 
+                        if (button.InvokeRequired)
+                        {
+                            button.BeginInvoke((MethodInvoker)delegate ()
+                            {
+                                button.Enabled = true;
+                            });
+                        }
+                        else
+                        {
+                            button.Enabled = true;
+                        }
+
+                    }
+                    catch (Exception exception)
+                    {
+                        // TODO: Log the error.
+                    }
+                }));
+
+            worker.Start();
+        }
+
         private void robot_OnImageDeliver(object sender, EventArgImage e)
         {
             if (this.inputImage != null) this.inputImage.Dispose();
@@ -868,53 +1003,6 @@ namespace Androbot
             this.GetRobotLocation();
         }
 
-        private void GenerateChrtData()
-        {
-            // Inspiration ...
-            // http://stackoverflow.com/questions/10622674/chart-creating-dynamically-in-net-c-sharp
-
-            this.crtMagVectors.Series.Clear();
-
-            Series seriesX = new System.Windows.Forms.DataVisualization.Charting.Series
-            {
-                Name = "X",
-                Color = System.Drawing.Color.Green,
-                IsVisibleInLegend = false,
-                IsXValueIndexed = true,
-                ChartType = SeriesChartType.Line
-            };
-
-            Series seriesY = new System.Windows.Forms.DataVisualization.Charting.Series
-            {
-                Name = "Y",
-                Color = System.Drawing.Color.Red,
-                IsVisibleInLegend = false,
-                IsXValueIndexed = true,
-                ChartType = SeriesChartType.Line
-            };
-
-            this.crtMagVectors.Series.Add(seriesX);
-            this.crtMagVectors.Series.Add(seriesY);
-
-            for (int i = 0; i < 100; i++)
-            {
-                seriesX.Points.AddXY(i, fX(i));
-                seriesY.Points.AddXY(i, fY(i));
-            }
-
-            this.crtMagVectors.Invalidate();
-        }
-
-        private double fX(int i)
-        {
-            var f1 = 59894 - (8128 * i) + (262 * i * i) - (1.6 * i * i * i);
-            return f1;
-        }
-        private double fY(int i)
-        {
-            var f1 = 1 - (8128 * i) + (262 * i * i) - (1.6 * i * i * i);
-            return f1;
-        }
 
         #region Track bar shift value.
 
@@ -932,5 +1020,20 @@ namespace Androbot
         }
 
         #endregion
+
+        #region Mode Radio Buttons
+
+        private void rbtnPositional_CheckedChanged(object sender, EventArgs e)
+        {
+            this.motionMode = MotionMode.Positional;
+        }
+
+        private void rbtnSpeed_CheckedChanged(object sender, EventArgs e)
+        {
+            this.motionMode = MotionMode.Speed;
+        }
+
+        #endregion
+
     }
 }

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +49,8 @@
             this.tlpRobotFunctionalities = new System.Windows.Forms.TableLayoutPanel();
             this.pbMain = new System.Windows.Forms.PictureBox();
             this.pCaptureComponents = new System.Windows.Forms.Panel();
+            this.lblShiftValue = new System.Windows.Forms.Label();
+            this.trbShiftValue = new System.Windows.Forms.TrackBar();
             this.btn3Dfy = new System.Windows.Forms.Button();
             this.btnCapture = new System.Windows.Forms.Button();
             this.tpGeoLocation = new System.Windows.Forms.TabPage();
@@ -66,6 +68,9 @@
             this.pSpeachComponents = new System.Windows.Forms.Panel();
             this.btnSpeak = new System.Windows.Forms.Button();
             this.tpMotion = new System.Windows.Forms.TabPage();
+            this.gpbMotionMode = new System.Windows.Forms.GroupBox();
+            this.rbtnSpeed = new System.Windows.Forms.RadioButton();
+            this.rbtnPositional = new System.Windows.Forms.RadioButton();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnBackward = new System.Windows.Forms.Button();
@@ -79,8 +84,6 @@
             this.btnGetSensors = new System.Windows.Forms.Button();
             this.btnStopSensors = new System.Windows.Forms.Button();
             this.btnStartSeonsors = new System.Windows.Forms.Button();
-            this.trbShiftValue = new System.Windows.Forms.TrackBar();
-            this.lblShiftValue = new System.Windows.Forms.Label();
             this.mainMenuStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
             this.tabRobotFunctionalities.SuspendLayout();
@@ -88,6 +91,7 @@
             this.tlpRobotFunctionalities.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).BeginInit();
             this.pCaptureComponents.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbShiftValue)).BeginInit();
             this.tpGeoLocation.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.pGeoLocationComponents.SuspendLayout();
@@ -96,12 +100,12 @@
             this.tlpRobotSpeach.SuspendLayout();
             this.pSpeachComponents.SuspendLayout();
             this.tpMotion.SuspendLayout();
+            this.gpbMotionMode.SuspendLayout();
             this.tpSensors.SuspendLayout();
             this.tlpRobotSensors.SuspendLayout();
             this.pSensors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.crtMagVectors)).BeginInit();
             this.pSensorComponenst.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trbShiftValue)).BeginInit();
             this.SuspendLayout();
             // 
             // mainMenuStrip
@@ -274,6 +278,27 @@
             this.pCaptureComponents.Name = "pCaptureComponents";
             this.pCaptureComponents.Size = new System.Drawing.Size(1240, 75);
             this.pCaptureComponents.TabIndex = 2;
+            // 
+            // lblShiftValue
+            // 
+            this.lblShiftValue.AutoSize = true;
+            this.lblShiftValue.Location = new System.Drawing.Point(540, 12);
+            this.lblShiftValue.Name = "lblShiftValue";
+            this.lblShiftValue.Size = new System.Drawing.Size(80, 20);
+            this.lblShiftValue.TabIndex = 13;
+            this.lblShiftValue.Text = "Shift: 10";
+            // 
+            // trbShiftValue
+            // 
+            this.trbShiftValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trbShiftValue.Location = new System.Drawing.Point(394, 5);
+            this.trbShiftValue.Margin = new System.Windows.Forms.Padding(4);
+            this.trbShiftValue.Maximum = 20;
+            this.trbShiftValue.Name = "trbShiftValue";
+            this.trbShiftValue.Size = new System.Drawing.Size(139, 56);
+            this.trbShiftValue.TabIndex = 12;
+            this.trbShiftValue.Value = 10;
+            this.trbShiftValue.ValueChanged += new System.EventHandler(this.trbShiftValue_ValueChanged);
             // 
             // btn3Dfy
             // 
@@ -472,6 +497,7 @@
             // 
             // tpMotion
             // 
+            this.tpMotion.Controls.Add(this.gpbMotionMode);
             this.tpMotion.Controls.Add(this.btnRight);
             this.tpMotion.Controls.Add(this.btnStop);
             this.tpMotion.Controls.Add(this.btnBackward);
@@ -485,20 +511,56 @@
             this.tpMotion.Text = "Motion";
             this.tpMotion.UseVisualStyleBackColor = true;
             // 
+            // gpbMotionMode
+            // 
+            this.gpbMotionMode.Controls.Add(this.rbtnSpeed);
+            this.gpbMotionMode.Controls.Add(this.rbtnPositional);
+            this.gpbMotionMode.Location = new System.Drawing.Point(8, 299);
+            this.gpbMotionMode.Name = "gpbMotionMode";
+            this.gpbMotionMode.Size = new System.Drawing.Size(307, 93);
+            this.gpbMotionMode.TabIndex = 24;
+            this.gpbMotionMode.TabStop = false;
+            this.gpbMotionMode.Text = "Motion Mode";
+            // 
+            // rbtnSpeed
+            // 
+            this.rbtnSpeed.AutoSize = true;
+            this.rbtnSpeed.Location = new System.Drawing.Point(6, 56);
+            this.rbtnSpeed.Name = "rbtnSpeed";
+            this.rbtnSpeed.Size = new System.Drawing.Size(82, 24);
+            this.rbtnSpeed.TabIndex = 1;
+            this.rbtnSpeed.TabStop = true;
+            this.rbtnSpeed.Text = "Speed";
+            this.rbtnSpeed.UseVisualStyleBackColor = true;
+            this.rbtnSpeed.CheckedChanged += new System.EventHandler(this.rbtnSpeed_CheckedChanged);
+            // 
+            // rbtnPositional
+            // 
+            this.rbtnPositional.AutoSize = true;
+            this.rbtnPositional.Location = new System.Drawing.Point(6, 26);
+            this.rbtnPositional.Name = "rbtnPositional";
+            this.rbtnPositional.Size = new System.Drawing.Size(113, 24);
+            this.rbtnPositional.TabIndex = 0;
+            this.rbtnPositional.TabStop = true;
+            this.rbtnPositional.Text = "Positional";
+            this.rbtnPositional.UseVisualStyleBackColor = true;
+            this.rbtnPositional.CheckedChanged += new System.EventHandler(this.rbtnPositional_CheckedChanged);
+            // 
             // btnRight
             // 
-            this.btnRight.Image = global::DiO_Androbot.Images.ArrowRight;
+            this.btnRight.Image = global::Androbot.Images.ArrowRight;
             this.btnRight.Location = new System.Drawing.Point(218, 105);
             this.btnRight.Margin = new System.Windows.Forms.Padding(4);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(97, 90);
             this.btnRight.TabIndex = 23;
             this.btnRight.UseVisualStyleBackColor = true;
-            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
+            this.btnRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRight_MouseDown);
+            this.btnRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnRight_MouseUp);
             // 
             // btnStop
             // 
-            this.btnStop.Image = global::DiO_Androbot.Images.Stop;
+            this.btnStop.Image = global::Androbot.Images.Stop;
             this.btnStop.Location = new System.Drawing.Point(112, 105);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
@@ -509,35 +571,39 @@
             // 
             // btnBackward
             // 
-            this.btnBackward.Image = global::DiO_Androbot.Images.ArrowDown;
+            this.btnBackward.Image = global::Androbot.Images.ArrowDown;
             this.btnBackward.Location = new System.Drawing.Point(112, 202);
             this.btnBackward.Margin = new System.Windows.Forms.Padding(4);
             this.btnBackward.Name = "btnBackward";
             this.btnBackward.Size = new System.Drawing.Size(97, 90);
             this.btnBackward.TabIndex = 21;
             this.btnBackward.UseVisualStyleBackColor = true;
-            this.btnBackward.Click += new System.EventHandler(this.btnBackward_Click);
+            this.btnBackward.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnBackward_MouseDown);
+            this.btnBackward.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnBackward_MouseUp);
             // 
             // btnLeft
             // 
-            this.btnLeft.Image = global::DiO_Androbot.Images.ArrowLeft;
+            this.btnLeft.Image = global::Androbot.Images.ArrowLeft;
             this.btnLeft.Location = new System.Drawing.Point(7, 105);
             this.btnLeft.Margin = new System.Windows.Forms.Padding(4);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(97, 90);
             this.btnLeft.TabIndex = 20;
             this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnLeft_MouseDown);
+            this.btnLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnLeft_MouseUp);
             // 
             // btnForward
             // 
-            this.btnForward.Image = global::DiO_Androbot.Images.ArrowUp;
+            this.btnForward.Image = global::Androbot.Images.ArrowUp;
             this.btnForward.Location = new System.Drawing.Point(112, 7);
             this.btnForward.Margin = new System.Windows.Forms.Padding(4);
             this.btnForward.Name = "btnForward";
             this.btnForward.Size = new System.Drawing.Size(97, 90);
             this.btnForward.TabIndex = 19;
             this.btnForward.UseVisualStyleBackColor = true;
-            this.btnForward.Click += new System.EventHandler(this.btnForward_Click);
+            this.btnForward.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnForward_MouseDown);
+            this.btnForward.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnForward_MouseUp);
             // 
             // tpSensors
             // 
@@ -577,16 +643,16 @@
             // 
             // crtMagVectors
             // 
-            chartArea2.Name = "ChartArea1";
-            this.crtMagVectors.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.crtMagVectors.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.crtMagVectors.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.crtMagVectors.Legends.Add(legend1);
             this.crtMagVectors.Location = new System.Drawing.Point(6, 3);
             this.crtMagVectors.Name = "crtMagVectors";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.crtMagVectors.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.crtMagVectors.Series.Add(series1);
             this.crtMagVectors.Size = new System.Drawing.Size(677, 329);
             this.crtMagVectors.TabIndex = 0;
             this.crtMagVectors.Text = "chart1";
@@ -635,27 +701,6 @@
             this.btnStartSeonsors.UseVisualStyleBackColor = true;
             this.btnStartSeonsors.Click += new System.EventHandler(this.btnStartSeonsors_Click);
             // 
-            // trbShiftValue
-            // 
-            this.trbShiftValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trbShiftValue.Location = new System.Drawing.Point(394, 5);
-            this.trbShiftValue.Margin = new System.Windows.Forms.Padding(4);
-            this.trbShiftValue.Maximum = 20;
-            this.trbShiftValue.Name = "trbShiftValue";
-            this.trbShiftValue.Size = new System.Drawing.Size(139, 56);
-            this.trbShiftValue.TabIndex = 12;
-            this.trbShiftValue.Value = 10;
-            this.trbShiftValue.ValueChanged += new System.EventHandler(this.trbShiftValue_ValueChanged);
-            // 
-            // lblShiftValue
-            // 
-            this.lblShiftValue.AutoSize = true;
-            this.lblShiftValue.Location = new System.Drawing.Point(540, 12);
-            this.lblShiftValue.Name = "lblShiftValue";
-            this.lblShiftValue.Size = new System.Drawing.Size(80, 20);
-            this.lblShiftValue.TabIndex = 13;
-            this.lblShiftValue.Text = "Shift: 10";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
@@ -681,6 +726,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).EndInit();
             this.pCaptureComponents.ResumeLayout(false);
             this.pCaptureComponents.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbShiftValue)).EndInit();
             this.tpGeoLocation.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.pGeoLocationComponents.ResumeLayout(false);
@@ -690,12 +736,13 @@
             this.tlpRobotSpeach.PerformLayout();
             this.pSpeachComponents.ResumeLayout(false);
             this.tpMotion.ResumeLayout(false);
+            this.gpbMotionMode.ResumeLayout(false);
+            this.gpbMotionMode.PerformLayout();
             this.tpSensors.ResumeLayout(false);
             this.tlpRobotSensors.ResumeLayout(false);
             this.pSensors.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.crtMagVectors)).EndInit();
             this.pSensorComponenst.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.trbShiftValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -752,6 +799,9 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart crtMagVectors;
         private System.Windows.Forms.Label lblShiftValue;
         private System.Windows.Forms.TrackBar trbShiftValue;
+        private System.Windows.Forms.GroupBox gpbMotionMode;
+        private System.Windows.Forms.RadioButton rbtnSpeed;
+        private System.Windows.Forms.RadioButton rbtnPositional;
     }
 }
 

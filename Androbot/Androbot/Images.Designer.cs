@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DiO_Androbot {
+namespace Androbot {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DiO_Androbot {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DiO_Androbot.Images", typeof(Images).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Androbot.Images", typeof(Images).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
