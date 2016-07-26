@@ -79,6 +79,8 @@
             this.btnGetSensors = new System.Windows.Forms.Button();
             this.btnStopSensors = new System.Windows.Forms.Button();
             this.btnStartSeonsors = new System.Windows.Forms.Button();
+            this.trbShiftValue = new System.Windows.Forms.TrackBar();
+            this.lblShiftValue = new System.Windows.Forms.Label();
             this.mainMenuStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
             this.tabRobotFunctionalities.SuspendLayout();
@@ -99,6 +101,7 @@
             this.pSensors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.crtMagVectors)).BeginInit();
             this.pSensorComponenst.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trbShiftValue)).BeginInit();
             this.SuspendLayout();
             // 
             // mainMenuStrip
@@ -262,6 +265,8 @@
             // 
             // pCaptureComponents
             // 
+            this.pCaptureComponents.Controls.Add(this.lblShiftValue);
+            this.pCaptureComponents.Controls.Add(this.trbShiftValue);
             this.pCaptureComponents.Controls.Add(this.btn3Dfy);
             this.pCaptureComponents.Controls.Add(this.btnCapture);
             this.pCaptureComponents.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -630,6 +635,27 @@
             this.btnStartSeonsors.UseVisualStyleBackColor = true;
             this.btnStartSeonsors.Click += new System.EventHandler(this.btnStartSeonsors_Click);
             // 
+            // trbShiftValue
+            // 
+            this.trbShiftValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trbShiftValue.Location = new System.Drawing.Point(394, 5);
+            this.trbShiftValue.Margin = new System.Windows.Forms.Padding(4);
+            this.trbShiftValue.Maximum = 20;
+            this.trbShiftValue.Name = "trbShiftValue";
+            this.trbShiftValue.Size = new System.Drawing.Size(139, 56);
+            this.trbShiftValue.TabIndex = 12;
+            this.trbShiftValue.Value = 10;
+            this.trbShiftValue.ValueChanged += new System.EventHandler(this.trbShiftValue_ValueChanged);
+            // 
+            // lblShiftValue
+            // 
+            this.lblShiftValue.AutoSize = true;
+            this.lblShiftValue.Location = new System.Drawing.Point(540, 12);
+            this.lblShiftValue.Name = "lblShiftValue";
+            this.lblShiftValue.Size = new System.Drawing.Size(80, 20);
+            this.lblShiftValue.TabIndex = 13;
+            this.lblShiftValue.Text = "Shift: 10";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
@@ -654,6 +680,7 @@
             this.tlpRobotFunctionalities.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbMain)).EndInit();
             this.pCaptureComponents.ResumeLayout(false);
+            this.pCaptureComponents.PerformLayout();
             this.tpGeoLocation.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.pGeoLocationComponents.ResumeLayout(false);
@@ -668,6 +695,7 @@
             this.pSensors.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.crtMagVectors)).EndInit();
             this.pSensorComponenst.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.trbShiftValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -722,6 +750,8 @@
         private System.Windows.Forms.Button btnStartSeonsors;
         private System.Windows.Forms.ToolStripStatusLabel tsslblSensorsSrvState;
         private System.Windows.Forms.DataVisualization.Charting.Chart crtMagVectors;
+        private System.Windows.Forms.Label lblShiftValue;
+        private System.Windows.Forms.TrackBar trbShiftValue;
     }
 }
 

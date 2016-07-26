@@ -54,6 +54,7 @@ PORT_NUMBER = 8080
 # Blutooth MAC adresses.
 #BT_DEVICE_ID = '00:11:11:18:62:60' 
 #BT_DEVICE_ID = '20:14:08:13:05:93' # DiO_ROBOT
+#BT_DEVICE_ID = '98:d3:34:90:5f:5d' # TivaBot
 
 #class RobotKarel():
 #
@@ -238,7 +239,9 @@ class RobotServiceHandler(BaseHTTPRequestHandler):
             #'{0}, {1}, {2}'.format('a', 'b', 'c')
             #str.zfill(40)
             #dist = 42
-            command = '?M{0}{1}'.format('+' if dist > 0 else '-', str(dist).zfill(4))
+            # ?LF255RB255\n
+            command = '?L{0}{1}R{0}{1}\n'.format('F' if dist > 0 else 'B', str(dist).zfill(4))
+            print(command)
             self.__droid.bluetoothWrite(command)
             
         # http://127.0.0.1:8080/?command=robot_rotate&values=100.0|150.0

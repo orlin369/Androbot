@@ -10,6 +10,8 @@ using Androbot.Androbot.Events;
 using Androbot.Androbot.Data.Sensors;
 using Androbot.Androbot.Data.GeoLocation;
 using System.Runtime.InteropServices;
+using StereoScopic;
+using System.Drawing.Drawing2D;
 
 // Inspiration for the maps.
 // https://developers.google.com/maps/documentation/static-maps/intro#Markers
@@ -37,6 +39,21 @@ namespace Androbot
         /// Map type visualization.
         /// </summary>
         private string mapType = Androbot.Data.GeoLocation.Google.MapType.SATELITE;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private int shiftValue = 10;
+
+        /// <summary>
+        /// Input original image.
+        /// </summary>
+        private Bitmap inputImage;
+
+        /// <summary>
+        /// Output processed image.
+        /// </summary>
+        private Bitmap outputImage;
 
         #endregion
 
@@ -143,9 +160,7 @@ namespace Androbot
 
         private void btn3Dfy_Click(object sender, EventArgs e)
         {
-            //TODO: Make anaglyph from the captured image.
-            //TODO: Copy the 3D generaotr.
-            //TODO: Add slider for 3Dfication.
+            this.ProcessImage();
         }
 
         #endregion
@@ -184,7 +199,7 @@ namespace Androbot
 
         #region Private Methods
 
-        public static Bitmap FitImage(Bitmap image, Size size)
+        public Bitmap FitImage(Bitmap image, Size size)
         {
             var ratioX = (double)size.Width / image.Width;
             var ratioY = (double)size.Height / image.Height;
@@ -201,6 +216,30 @@ namespace Androbot
             }
 
             return newImage;
+        }
+
+        /// <summary>
+        /// Prosecc image.
+        /// </summary>
+        private void ProcessImage()
+        {
+            // jivanov@repir.eu Julian Ivanov
+            // 20140918 JI@DevGroup: Long running task should not be executed in the main thread.
+            //                       Thread thread = new Thread(() => 
+            //                                                  {
+            //                                                      // code executend in another thread
+            //                                                  });
+            //                       thread.Start();
+
+            Thread workerThread = new Thread(() =>
+            {
+                // Rend the image.
+                this.outputImage = Anaglyph.Make3DPopIn(new Bitmap((Image)this.inputImage), this.shiftValue);
+                // Show the nwe mage.
+                this.pbMain.Image = this.FitImage(this.outputImage, this.pbMain.Size);
+            });
+            workerThread.Start();
+
         }
 
         #endregion
@@ -755,8 +794,10 @@ namespace Androbot
 
         private void robot_OnImageDeliver(object sender, EventArgImage e)
         {
-            Bitmap rsz = FitImage((Bitmap)e.Image, this.pbMain.Size);
-            this.pbMain.Image = rsz;
+            if (this.inputImage != null) this.inputImage.Dispose();
+            this.inputImage = (Bitmap)e.Image;
+
+            this.pbMain.Image = FitImage(this.inputImage, this.pbMain.Size);
         }
 
         private void robot_OnLocationDeliver(object sender, Location e)
@@ -874,5 +915,22 @@ namespace Androbot
             var f1 = 1 - (8128 * i) + (262 * i * i) - (1.6 * i * i * i);
             return f1;
         }
+
+        #region Track bar shift value.
+
+        /// <summary>
+        /// When the track bar value change update everything.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void trbShiftValue_ValueChanged(object sender, EventArgs e)
+        {
+            // Update the value.
+            this.shiftValue = this.trbShiftValue.Value;
+            // Visualise the value.
+            this.lblShiftValue.Text = String.Format("Shift: {0}", this.shiftValue);
+        }
+
+        #endregion
     }
 }
