@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Androbot</RootNamespace>
     <AssemblyName>Androbot</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -146,6 +146,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="RobotSide\Arduino\KarelV1\KarelV1.ino" />
+    <None Include="RobotSide\TivaC\Betino\Betino.ino" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -178,7 +180,7 @@
     <None Include="Resources\Sensor2.png" />
     <None Include="Resources\Sensor3.png" />
     <None Include="Resources\Stop.png" />
-    <Content Include="RobotSide\robot.py" />
+    <Content Include="MobilePhone\robot.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
