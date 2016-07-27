@@ -240,14 +240,16 @@ class RobotServiceHandler(BaseHTTPRequestHandler):
             #str.zfill(40)
             #dist = 42
             # ?LF255RB255\n
-            command = '?L{0}{1}R{0}{1}\n'.format('F' if dist > 0 else 'B', str(dist).zfill(4))
+            command = '?L{0}{1}R{0}{1}\n'.format('F' if dist > 0 else 'B', str(dist).zfill(3))
             print(command)
             self.__droid.bluetoothWrite(command)
             
         # http://127.0.0.1:8080/?command=robot_rotate&values=100.0|150.0
         elif(key == self.__ROBOT_ROTATE):
             #deg, speed = values.split(self.__SEPARATOR)
-            self.__droid.bluetoothWrite("ROTATE")
+            command = '?L{0}{1}R{0}{1}\n'.format('F' if dist > 0 else 'B', str(dist).zfill(3))
+            print(command)
+            self.__droid.bluetoothWrite(command)
             
         # http://127.0.0.1:8080/?command=robot_curve&values=10.0|15.0|10.0|15.0
         elif(key == self.__ROBOT_CURVE):
