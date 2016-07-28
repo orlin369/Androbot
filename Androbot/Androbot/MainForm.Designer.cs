@@ -56,6 +56,11 @@ namespace Androbot
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.save2DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.save3DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,6 +78,7 @@ namespace Androbot
             this.tlpRobotFunctionalities = new System.Windows.Forms.TableLayoutPanel();
             this.pbMain = new System.Windows.Forms.PictureBox();
             this.pCaptureComponents = new System.Windows.Forms.Panel();
+            this.btnProcessWater = new System.Windows.Forms.Button();
             this.lblShiftValue = new System.Windows.Forms.Label();
             this.trbShiftValue = new System.Windows.Forms.TrackBar();
             this.btn3Dfy = new System.Windows.Forms.Button();
@@ -108,12 +114,7 @@ namespace Androbot
             this.btnGetSensors = new System.Windows.Forms.Button();
             this.btnStopSensors = new System.Windows.Forms.Button();
             this.btnStartSeonsors = new System.Windows.Forms.Button();
-            this.btnProcessWater = new System.Windows.Forms.Button();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.save2DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.save3DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveWaterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
             this.tabRobotFunctionalities.SuspendLayout();
@@ -152,6 +153,44 @@ namespace Androbot
             this.mainMenuStrip.Size = new System.Drawing.Size(1260, 28);
             this.mainMenuStrip.TabIndex = 9;
             this.mainMenuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.save2DToolStripMenuItem,
+            this.save3DToolStripMenuItem,
+            this.saveWaterToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // save2DToolStripMenuItem
+            // 
+            this.save2DToolStripMenuItem.Name = "save2DToolStripMenuItem";
+            this.save2DToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.save2DToolStripMenuItem.Text = "Save 2D";
+            this.save2DToolStripMenuItem.Click += new System.EventHandler(this.save2DToolStripMenuItem_Click);
+            // 
+            // save3DToolStripMenuItem
+            // 
+            this.save3DToolStripMenuItem.Name = "save3DToolStripMenuItem";
+            this.save3DToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.save3DToolStripMenuItem.Text = "Save 3D";
+            this.save3DToolStripMenuItem.Click += new System.EventHandler(this.save3DToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // connectionToolStripMenuItem
             // 
@@ -310,6 +349,17 @@ namespace Androbot
             this.pCaptureComponents.Name = "pCaptureComponents";
             this.pCaptureComponents.Size = new System.Drawing.Size(1240, 75);
             this.pCaptureComponents.TabIndex = 2;
+            // 
+            // btnProcessWater
+            // 
+            this.btnProcessWater.Location = new System.Drawing.Point(1005, 5);
+            this.btnProcessWater.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.btnProcessWater.Name = "btnProcessWater";
+            this.btnProcessWater.Size = new System.Drawing.Size(183, 35);
+            this.btnProcessWater.TabIndex = 14;
+            this.btnProcessWater.Text = "Water";
+            this.btnProcessWater.UseVisualStyleBackColor = true;
+            this.btnProcessWater.Click += new System.EventHandler(this.btnProcessWater_Click);
             // 
             // lblShiftValue
             // 
@@ -733,53 +783,12 @@ namespace Androbot
             this.btnStartSeonsors.UseVisualStyleBackColor = true;
             this.btnStartSeonsors.Click += new System.EventHandler(this.btnStartSeonsors_Click);
             // 
-            // btnProcessWater
+            // saveWaterToolStripMenuItem
             // 
-            this.btnProcessWater.Location = new System.Drawing.Point(1005, 5);
-            this.btnProcessWater.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            this.btnProcessWater.Name = "btnProcessWater";
-            this.btnProcessWater.Size = new System.Drawing.Size(183, 35);
-            this.btnProcessWater.TabIndex = 14;
-            this.btnProcessWater.Text = "Water";
-            this.btnProcessWater.UseVisualStyleBackColor = true;
-            this.btnProcessWater.Click += new System.EventHandler(this.btnProcessWater_Click);
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.save2DToolStripMenuItem,
-            this.save3DToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // save2DToolStripMenuItem
-            // 
-            this.save2DToolStripMenuItem.Name = "save2DToolStripMenuItem";
-            this.save2DToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.save2DToolStripMenuItem.Text = "Save 2D";
-            this.save2DToolStripMenuItem.Click += new System.EventHandler(this.save2DToolStripMenuItem_Click);
-            // 
-            // save3DToolStripMenuItem
-            // 
-            this.save3DToolStripMenuItem.Name = "save3DToolStripMenuItem";
-            this.save3DToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.save3DToolStripMenuItem.Text = "Save 3D";
-            this.save3DToolStripMenuItem.Click += new System.EventHandler(this.save3DToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
+            this.saveWaterToolStripMenuItem.Name = "saveWaterToolStripMenuItem";
+            this.saveWaterToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.saveWaterToolStripMenuItem.Text = "Save Water";
+            this.saveWaterToolStripMenuItem.Click += new System.EventHandler(this.saveWaterToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -888,6 +897,7 @@ namespace Androbot
         private System.Windows.Forms.ToolStripMenuItem save3DToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveWaterToolStripMenuItem;
     }
 }
 

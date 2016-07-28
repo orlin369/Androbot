@@ -36,6 +36,7 @@ using Androbot.Androbot.Data.GeoLocation;
 using StereoScopic;
 using System.IO;
 using Emgu.CV.Structure;
+using Emgu.CV.UI;
 
 // Inspiration for the maps.
 // https://developers.google.com/maps/documentation/static-maps/intro#Markers
@@ -74,9 +75,15 @@ namespace Androbot
         private Bitmap inputImage;
 
         /// <summary>
-        /// Output processed image.
+        /// Output processed Anaglyph image.
         /// </summary>
-        private Bitmap outputImage;
+        private Bitmap anaglyphImage;
+
+        /// <summary>
+        /// Output processed Anaglyph image.
+        /// </summary>
+        private Bitmap waterImage;
+
 
         private MotionMode motionMode = MotionMode.Positional;
 
@@ -84,6 +91,11 @@ namespace Androbot
         /// Image path
         /// </summary>
         private string imagePath = @"Images";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Emgu.CV.Image<Gray, byte> mask;
 
         #endregion
 
@@ -103,6 +115,18 @@ namespace Androbot
             {
                 this.cbMapType.SelectedIndex = 0;
             }
+
+            this.mask = new Emgu.CV.Image<Gray, byte>(480, 640, new Gray(0));
+            Gray color = new Gray(255);
+            for (int x = 0; x < 480; x++)
+            {
+                for (int y = 400; y < 640; y++)
+                {
+                    mask[y, x] = color;
+                }
+            }
+            //ImageViewer.Show(mask, "Test Window");
+
         }
 
         #endregion
@@ -227,7 +251,7 @@ namespace Androbot
 
         private void btn3Dfy_Click(object sender, EventArgs e)
         {
-            this.ProcessImage();
+            this.Process3D();
         }
 
         #endregion
@@ -288,7 +312,7 @@ namespace Androbot
         /// <summary>
         /// Process image to make it Anaglyph 3D.
         /// </summary>
-        private void ProcessImage()
+        private void Process3D()
         {
             // jivanov@repir.eu Julian Ivanov
             // 20140918 JI@DevGroup: Long running task should not be executed in the main thread.
@@ -301,9 +325,32 @@ namespace Androbot
             Thread workerThread = new Thread(() =>
             {
                 // Rend the image.
-                this.outputImage = Anaglyph.Make3DPopIn(new Bitmap((Image)this.inputImage), this.shiftValue);
+                this.anaglyphImage = Anaglyph.Make3DPopIn(new Bitmap((Image)this.inputImage), this.shiftValue);
                 // Show the nwe mage.
-                this.pbMain.Image = this.FitImage(this.outputImage, this.pbMain.Size);
+                this.pbMain.Image = this.FitImage(this.anaglyphImage, this.pbMain.Size);
+            });
+            workerThread.Start();
+        }
+
+        private void ProcessWater()
+        {
+            if (this.inputImage == null)
+            {
+                return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
+                Emgu.CV.Image<Gray, byte> water = inpImg.InRange(new Bgr(100, 100, 0), new Bgr(255, 255, 255));
+                water = water.Add(mask);
+                //water._Dilate(1);
+
+                if (this.waterImage != null) this.waterImage.Dispose();
+                // Dump the image.
+                this.waterImage = water.ToBitmap();
+                // Show the nwe mage.
+                this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
             });
             workerThread.Start();
         }
@@ -313,7 +360,7 @@ namespace Androbot
         /// </summary>
         private void SaveImage3D()
         {
-            if(this.outputImage == null)
+            if(this.anaglyphImage == null)
             {
                 return;
             }
@@ -324,7 +371,7 @@ namespace Androbot
                 string tmpPath = String.Format(@"3D_{0}_{1}.PNG", this.shiftValue, DateTime.Now.ToString("yyyyMMddHHmmss"));
                 tmpPath = Path.Combine(this.imagePath, tmpPath);
                 // Save the image.
-                this.outputImage.Save(tmpPath);
+                this.anaglyphImage.Save(tmpPath);
             });
 
             workerThread.Start();
@@ -352,6 +399,25 @@ namespace Androbot
             workerThread.Start();
         }
 
+        private void SaveWaterImage()
+        {
+            if (this.waterImage == null)
+            {
+                return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                // Generate the image name.
+                string tmpPath = String.Format(@"2D_WATER_{0}.PNG", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                tmpPath = Path.Combine(this.imagePath, tmpPath);
+                // Save the image.
+                this.waterImage.Save(tmpPath);
+            });
+
+            workerThread.Start();
+        }
+        
         private void GenerateChrtData()
         {
             // Inspiration ...
@@ -1123,21 +1189,7 @@ namespace Androbot
 
         private void btnProcessWater_Click(object sender, EventArgs e)
         {
-            if(this.inputImage == null)
-            {
-                return;
-            }
-
-            Thread workerThread = new Thread(() =>
-            {
-                Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
-
-                Emgu.CV.Image<Gray, byte> water = inpImg.InRange(new Bgr(100, 100, 0), new Bgr(255, 255, 255));
-                
-                // Show the nwe mage.
-                this.pbMain.Image = this.FitImage(water.ToBitmap(), this.pbMain.Size);
-            });
-            workerThread.Start();
+            this.ProcessWater();
         }
 
         private void save2DToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1153,6 +1205,11 @@ namespace Androbot
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void saveWaterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveWaterImage();
         }
     }
 }
