@@ -270,12 +270,9 @@ namespace Androbot.Androbot
         /// <remarks>
         /// http://127.0.0.1:8080/?command=robot_move&value=360.5
         /// </remarks>
-        public void Move(double distance, double speed)
+        public void Move(int distance, int speed)
         {
-            string sDistance = distance.ToString("F3").Replace(',', '.');
-            string sSpeed = speed.ToString("F3").Replace(',', '.');
-
-            string value = String.Format("{0}|{1}", sDistance, sSpeed);
+            string value = String.Format("{0}|{1}", distance, speed);
 
             string responseFromServer = this.MakeRequest(this.CreateUri("robot_move", value));
         }
@@ -287,12 +284,9 @@ namespace Androbot.Androbot
         /// <remarks>
         /// http://127.0.0.1:8080/?command=robot_rotate&value=360.5
         /// </remarks>
-        public void Rotate(double degree, double speed)
+        public void Rotate(int degree, int speed)
         {
-            string sDegree = degree.ToString("F3").Replace(',', '.');
-            string sSpeed = speed.ToString("F3").Replace(',', '.');
-
-            string value = String.Format("{0}|{1}", sDegree, sSpeed);
+            string value = String.Format("{0}|{1}", degree, speed);
 
             string responseFromServer = this.MakeRequest(this.CreateUri("robot_rotate", value));
         }

@@ -43,7 +43,6 @@ using StereoScopic;
 // TODO: Add circular diagram for the sensor.
 // TODO: Log4Net READ MF.
 // TODO: Add LORA API layer.
-// TODO: iRobot package learn.
 
 namespace Androbot
 {
@@ -280,7 +279,7 @@ namespace Androbot
         }
 
         /// <summary>
-        /// Prosecc image.
+        /// Process image to make it Anaglyph 3D.
         /// </summary>
         private void ProcessImage()
         {
@@ -300,7 +299,6 @@ namespace Androbot
                 this.pbMain.Image = this.FitImage(this.outputImage, this.pbMain.Size);
             });
             workerThread.Start();
-
         }
 
         private void GenerateChrtData()
@@ -849,7 +847,7 @@ namespace Androbot
             worker.Start();
         }
 
-        private void MoveRobot(Button button, float left, float right)
+        private void MoveRobot(Button button, int left, int right)
         {
             if (this.robot == null)
             {
@@ -900,7 +898,7 @@ namespace Androbot
             worker.Start();
         }
 
-        private void RotateRobot(Button button, float left, float right)
+        private void RotateRobot(Button button, int left, int right)
         {
             if (this.robot == null)
             {
@@ -955,7 +953,7 @@ namespace Androbot
         {
             if (this.inputImage != null) this.inputImage.Dispose();
             this.inputImage = (Bitmap)e.Image;
-
+            // TODO: Rotate image at 90 deg. CW.
             this.pbMain.Image = FitImage(this.inputImage, this.pbMain.Size);
         }
 
