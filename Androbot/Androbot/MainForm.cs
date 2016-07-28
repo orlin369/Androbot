@@ -34,6 +34,8 @@ using Androbot.Androbot.Events;
 using Androbot.Androbot.Data.Sensors;
 using Androbot.Androbot.Data.GeoLocation;
 using StereoScopic;
+using System.IO;
+using Emgu.CV.Structure;
 
 // Inspiration for the maps.
 // https://developers.google.com/maps/documentation/static-maps/intro#Markers
@@ -77,6 +79,11 @@ namespace Androbot
         private Bitmap outputImage;
 
         private MotionMode motionMode = MotionMode.Positional;
+
+        /// <summary>
+        /// Image path
+        /// </summary>
+        private string imagePath = @"Images";
 
         #endregion
 
@@ -301,6 +308,50 @@ namespace Androbot
             workerThread.Start();
         }
 
+        /// <summary>
+        /// Save the processed image.
+        /// </summary>
+        private void SaveImage3D()
+        {
+            if(this.outputImage == null)
+            {
+                return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                // Generate the image name.
+                string tmpPath = String.Format(@"3D_{0}_{1}.PNG", this.shiftValue, DateTime.Now.ToString("yyyyMMddHHmmss"));
+                tmpPath = Path.Combine(this.imagePath, tmpPath);
+                // Save the image.
+                this.outputImage.Save(tmpPath);
+            });
+
+            workerThread.Start();
+        }
+
+        /// <summary>
+        /// Save the processed image.
+        /// </summary>
+        private void SaveImage2D()
+        {
+            if (this.inputImage == null)
+            {
+                return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                // Generate the image name.
+                string tmpPath = String.Format(@"2D_{0}.PNG", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                tmpPath = Path.Combine(this.imagePath, tmpPath);
+                // Save the image.
+                this.inputImage.Save(tmpPath);
+            });
+
+            workerThread.Start();
+        }
+
         private void GenerateChrtData()
         {
             // Inspiration ...
@@ -360,26 +411,35 @@ namespace Androbot
                 return;
             }
 
-            try
-            {
-                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.RobotIP), Settings.Default.RobotPort);
-                this.robot = new Androbot.Robot(endPoint);
-                this.robot.OnImageDeliver += this.robot_OnImageDeliver;
-                this.robot.OnLocationDelivered += this.robot_OnLocationDeliver;
-                this.robot.OnLocationStarted += this.robot_OnLocationStarted;
-                this.robot.OnLocationStoped += this.robot_OnLocationStoped;
-                this.robot.OnSensorsStarted += this.robot_OnSensoerStarted;
-                this.robot.OnSensorsStoped += this.robot_OnSensorsStoped;
-                this.robot.OnSensorsDelivered += this.robot_OnSensorsDelivered;
+            // Gnerate the thread to do the job.
+            Thread worker = new Thread(new ThreadStart(
+                delegate ()
+                {
+                    try
+                    {
+                        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(Settings.Default.RobotIP), Settings.Default.RobotPort);
+                        this.robot = new Androbot.Robot(endPoint);
+                        this.robot.OnImageDeliver += this.robot_OnImageDeliver;
+                        this.robot.OnLocationDelivered += this.robot_OnLocationDeliver;
+                        this.robot.OnLocationStarted += this.robot_OnLocationStarted;
+                        this.robot.OnLocationStoped += this.robot_OnLocationStoped;
+                        this.robot.OnSensorsStarted += this.robot_OnSensoerStarted;
+                        this.robot.OnSensorsStoped += this.robot_OnSensorsStoped;
+                        this.robot.OnSensorsDelivered += this.robot_OnSensorsDelivered;
 
-                this.robot.Connect(Settings.Default.RobotBTID);
+                        this.robot.Connect(Settings.Default.RobotBTID);
 
-                this.lblConnectionStatus.Text = String.Format("Connection: {0}:{1}", Settings.Default.RobotIP, Settings.Default.RobotPort);
-            }
-            catch (Exception exception)
-            {
-                // TODO: Log the error.
-            }
+                        this.lblConnectionStatus.Text = String.Format("Connection: {0}:{1}", Settings.Default.RobotIP, Settings.Default.RobotPort);
+                    }
+                    catch (Exception exception)
+                    {
+                        // TODO: Log the error.
+                    }
+                }));
+
+            worker.Start();
+
+
         }
 
         private void DisconnectFromRobot()
@@ -952,8 +1012,12 @@ namespace Androbot
         private void robot_OnImageDeliver(object sender, EventArgImage e)
         {
             if (this.inputImage != null) this.inputImage.Dispose();
+
             this.inputImage = (Bitmap)e.Image;
-            // TODO: Rotate image at 90 deg. CW.
+
+            // If the camera is turned.
+            this.inputImage.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            
             this.pbMain.Image = FitImage(this.inputImage, this.pbMain.Size);
         }
 
@@ -1057,5 +1121,38 @@ namespace Androbot
 
         #endregion
 
+        private void btnProcessWater_Click(object sender, EventArgs e)
+        {
+            if(this.inputImage == null)
+            {
+                return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
+
+                Emgu.CV.Image<Gray, byte> water = inpImg.InRange(new Bgr(100, 100, 0), new Bgr(255, 255, 255));
+                
+                // Show the nwe mage.
+                this.pbMain.Image = this.FitImage(water.ToBitmap(), this.pbMain.Size);
+            });
+            workerThread.Start();
+        }
+
+        private void save2DToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveImage2D();
+        }
+
+        private void save3DToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveImage3D();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
