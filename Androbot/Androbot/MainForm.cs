@@ -28,15 +28,19 @@ using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.IO;
 
 using Androbot.Properties;
 using Androbot.Androbot.Events;
 using Androbot.Androbot.Data.Sensors;
 using Androbot.Androbot.Data.GeoLocation;
+
 using StereoScopic;
-using System.IO;
+
+using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.UI;
+using Emgu.CV.CvEnum;
 
 // Inspiration for the maps.
 // https://developers.google.com/maps/documentation/static-maps/intro#Markers
@@ -93,7 +97,7 @@ namespace Androbot
         private string imagePath = @"Images";
 
         /// <summary>
-        /// 
+        /// Mask image to isolate the down side of the image.
         /// </summary>
         private Emgu.CV.Image<Gray, byte> mask;
 
@@ -120,13 +124,12 @@ namespace Androbot
             Gray color = new Gray(255);
             for (int x = 0; x < 480; x++)
             {
-                for (int y = 400; y < 640; y++)
+                for (int y = 500; y < 640; y++)
                 {
                     mask[y, x] = color;
                 }
             }
             //ImageViewer.Show(mask, "Test Window");
-
         }
 
         #endregion
@@ -314,6 +317,11 @@ namespace Androbot
         /// </summary>
         private void Process3D()
         {
+            if (this.inputImage == null)
+            {
+                return;
+            }
+
             // jivanov@repir.eu Julian Ivanov
             // 20140918 JI@DevGroup: Long running task should not be executed in the main thread.
             //                       Thread thread = new Thread(() => 
@@ -336,19 +344,43 @@ namespace Androbot
         {
             if (this.inputImage == null)
             {
-                return;
+                //return;
             }
 
             Thread workerThread = new Thread(() =>
             {
-                Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
+                string path = @"C:\Users\POLYGONTeam\Documents\GitHub\Androbot\Androbot\Androbot\bin\Debug\Images\2D_20160728173548.PNG";
+
+                //Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
+                Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(path);
+
                 Emgu.CV.Image<Gray, byte> water = inpImg.InRange(new Bgr(100, 100, 0), new Bgr(255, 255, 255));
                 water = water.Add(mask);
                 //water._Dilate(1);
 
+                // Create the blobs.
+                Emgu.CV.Cvb.CvBlobs blobs = new Emgu.CV.Cvb.CvBlobs();
+                // Create blob detector.
+                Emgu.CV.Cvb.CvBlobDetector dtk = new Emgu.CV.Cvb.CvBlobDetector();
+                // Detect blobs.
+                uint state = dtk.Detect(water, blobs);
+
+                foreach (Emgu.CV.Cvb.CvBlob blob in blobs.Values)
+                {
+                    //Console.WriteLine("Center: X:{0:F3} Y:{1:F3}", blob.Centroid.X, blob.Centroid.Y);
+                    //Console.WriteLine("{0}", blob.Area);
+                    if (blob.Area >= 4500 && blob.Area < 34465)
+                    {
+                        //Console.WriteLine("{0}", blob.Area);
+                        inpImg.Draw(new CircleF(blob.Centroid, 5), new Bgr(Color.Red), 2);
+                        inpImg.Draw(blob.BoundingBox, new Bgr(Color.Blue), 2);
+                    }
+                }
+
+
                 if (this.waterImage != null) this.waterImage.Dispose();
                 // Dump the image.
-                this.waterImage = water.ToBitmap();
+                this.waterImage = inpImg.ToBitmap();
                 // Show the nwe mage.
                 this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
             });
