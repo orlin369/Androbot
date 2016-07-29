@@ -115,6 +115,8 @@ namespace Androbot
             this.btnGetSensors = new System.Windows.Forms.Button();
             this.btnStopSensors = new System.Windows.Forms.Button();
             this.btnStartSeonsors = new System.Windows.Forms.Button();
+            this.btnProcessRocks = new System.Windows.Forms.Button();
+            this.btnProcessFaces = new System.Windows.Forms.Button();
             this.mainMenuStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
             this.tabRobotFunctionalities.SuspendLayout();
@@ -346,6 +348,8 @@ namespace Androbot
             // 
             // pCaptureComponents
             // 
+            this.pCaptureComponents.Controls.Add(this.btnProcessFaces);
+            this.pCaptureComponents.Controls.Add(this.btnProcessRocks);
             this.pCaptureComponents.Controls.Add(this.btnProcessWater);
             this.pCaptureComponents.Controls.Add(this.lblShiftValue);
             this.pCaptureComponents.Controls.Add(this.trbShiftValue);
@@ -359,10 +363,10 @@ namespace Androbot
             // 
             // btnProcessWater
             // 
-            this.btnProcessWater.Location = new System.Drawing.Point(1005, 5);
+            this.btnProcessWater.Location = new System.Drawing.Point(1133, 5);
             this.btnProcessWater.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.btnProcessWater.Name = "btnProcessWater";
-            this.btnProcessWater.Size = new System.Drawing.Size(183, 35);
+            this.btnProcessWater.Size = new System.Drawing.Size(101, 35);
             this.btnProcessWater.TabIndex = 14;
             this.btnProcessWater.Text = "Water";
             this.btnProcessWater.UseVisualStyleBackColor = true;
@@ -371,7 +375,7 @@ namespace Androbot
             // lblShiftValue
             // 
             this.lblShiftValue.AutoSize = true;
-            this.lblShiftValue.Location = new System.Drawing.Point(540, 12);
+            this.lblShiftValue.Location = new System.Drawing.Point(795, 12);
             this.lblShiftValue.Name = "lblShiftValue";
             this.lblShiftValue.Size = new System.Drawing.Size(80, 20);
             this.lblShiftValue.TabIndex = 13;
@@ -380,7 +384,7 @@ namespace Androbot
             // trbShiftValue
             // 
             this.trbShiftValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trbShiftValue.Location = new System.Drawing.Point(394, 5);
+            this.trbShiftValue.Location = new System.Drawing.Point(649, 5);
             this.trbShiftValue.Margin = new System.Windows.Forms.Padding(4);
             this.trbShiftValue.Maximum = 20;
             this.trbShiftValue.Name = "trbShiftValue";
@@ -391,10 +395,10 @@ namespace Androbot
             // 
             // btn3Dfy
             // 
-            this.btn3Dfy.Location = new System.Drawing.Point(201, 5);
+            this.btn3Dfy.Location = new System.Drawing.Point(538, 5);
             this.btn3Dfy.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.btn3Dfy.Name = "btn3Dfy";
-            this.btn3Dfy.Size = new System.Drawing.Size(183, 35);
+            this.btn3Dfy.Size = new System.Drawing.Size(101, 35);
             this.btn3Dfy.TabIndex = 3;
             this.btn3Dfy.Text = "3D";
             this.btn3Dfy.UseVisualStyleBackColor = true;
@@ -790,6 +794,28 @@ namespace Androbot
             this.btnStartSeonsors.UseVisualStyleBackColor = true;
             this.btnStartSeonsors.Click += new System.EventHandler(this.btnStartSeonsors_Click);
             // 
+            // btnProcessRocks
+            // 
+            this.btnProcessRocks.Location = new System.Drawing.Point(1020, 5);
+            this.btnProcessRocks.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.btnProcessRocks.Name = "btnProcessRocks";
+            this.btnProcessRocks.Size = new System.Drawing.Size(101, 35);
+            this.btnProcessRocks.TabIndex = 15;
+            this.btnProcessRocks.Text = "Rocks";
+            this.btnProcessRocks.UseVisualStyleBackColor = true;
+            this.btnProcessRocks.Click += new System.EventHandler(this.btnProcessRocks_Click);
+            // 
+            // btnProcessFaces
+            // 
+            this.btnProcessFaces.Location = new System.Drawing.Point(907, 5);
+            this.btnProcessFaces.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.btnProcessFaces.Name = "btnProcessFaces";
+            this.btnProcessFaces.Size = new System.Drawing.Size(101, 35);
+            this.btnProcessFaces.TabIndex = 16;
+            this.btnProcessFaces.Text = "Faces";
+            this.btnProcessFaces.UseVisualStyleBackColor = true;
+            this.btnProcessFaces.Click += new System.EventHandler(this.btnProcessFaces_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
@@ -898,6 +924,8 @@ namespace Androbot
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWaterToolStripMenuItem;
+        private System.Windows.Forms.Button btnProcessRocks;
+        private System.Windows.Forms.Button btnProcessFaces;
     }
 }
 

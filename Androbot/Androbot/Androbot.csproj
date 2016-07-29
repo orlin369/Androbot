@@ -201,6 +201,9 @@
     <None Include="Resources\smile_16x16.png" />
     <None Include="Resources\undo_16x16.png" />
     <None Include="Resources\unsure.gif" />
+    <Content Include="haarcascade_frontalface_alt_tree.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TabStrip.dll" />
     <None Include="Resources\ArrowDown.png" />
     <None Include="Resources\ArrowLeft.png" />

@@ -257,6 +257,36 @@ namespace Androbot
             this.Process3D();
         }
 
+        private void btnProcessWater_Click(object sender, EventArgs e)
+        {
+            this.ProcessWater();
+        }
+
+        private void save2DToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveImage2D();
+        }
+
+        private void save3DToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveImage3D();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void saveWaterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.SaveWaterImage();
+        }
+
+        private void btnProcessRocks_Click(object sender, EventArgs e)
+        {
+            this.ProcessRocks();
+        }
+
         #endregion
 
         #region Menu
@@ -293,6 +323,12 @@ namespace Androbot
 
         #region Private Methods
 
+        /// <summary>
+        /// Fit image from one size to input size.
+        /// </summary>
+        /// <param name="image">Input image.</param>
+        /// <param name="size">New size.</param>
+        /// <returns>Resized image.</returns>
         public Bitmap FitImage(Bitmap image, Size size)
         {
             var ratioX = (double)size.Width / image.Width;
@@ -340,6 +376,9 @@ namespace Androbot
             workerThread.Start();
         }
 
+        /// <summary>
+        /// Process water in the image.
+        /// </summary>
         private void ProcessWater()
         {
             if (this.inputImage == null)
@@ -388,7 +427,105 @@ namespace Androbot
         }
 
         /// <summary>
-        /// Save the processed image.
+        /// Process rocks in the image.
+        /// </summary>
+        private void ProcessRocks()
+        {
+            if (this.inputImage == null)
+            {
+                //return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                string path = @"C:\Users\POLYGONTeam\Documents\GitHub\Androbot\Androbot\Androbot\bin\Debug\Images\2D_20160728170358.PNG";
+
+                //Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
+                Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(path);
+
+                Emgu.CV.Image<Gray, byte> water = inpImg.InRange(new Bgr(0, 100, 0), new Bgr(255, 255, 255));
+                water = water.Add(mask);
+                //water._Dilate(1);
+
+                // Create the blobs.
+                Emgu.CV.Cvb.CvBlobs blobs = new Emgu.CV.Cvb.CvBlobs();
+                // Create blob detector.
+                Emgu.CV.Cvb.CvBlobDetector dtk = new Emgu.CV.Cvb.CvBlobDetector();
+                // Detect blobs.
+                uint state = dtk.Detect(water, blobs);
+
+                foreach (Emgu.CV.Cvb.CvBlob blob in blobs.Values)
+                {
+                    //Console.WriteLine("Center: X:{0:F3} Y:{1:F3}", blob.Centroid.X, blob.Centroid.Y);
+                    //Console.WriteLine("{0}", blob.Area);
+                    if (blob.Area >= 4500 && blob.Area < 34465)
+                    {
+                        //Console.WriteLine("{0}", blob.Area);
+                        inpImg.Draw(new CircleF(blob.Centroid, 5), new Bgr(Color.Red), 2);
+                        inpImg.Draw(blob.BoundingBox, new Bgr(Color.Blue), 2);
+                    }
+                }
+                
+                if (this.waterImage != null) this.waterImage.Dispose();
+                // Dump the image.
+                this.waterImage = inpImg.ToBitmap();
+                // Show the nwe mage.
+                this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
+            });
+
+            workerThread.Start();
+        }
+
+        private void ProcessFaces()
+        {
+            if (this.inputImage == null)
+            {
+                //return;
+            }
+
+            Thread workerThread = new Thread(() =>
+            {
+                try
+                {
+                    string path = @"C:\Users\POLYGONTeam\Documents\GitHub\Androbot\Androbot\Androbot\bin\Debug\Images\2D_20160728170254.PNG";
+                    string haarCascadeSettings = @"C:\Users\POLYGONTeam\Documents\GitHub\Androbot\Androbot\Androbot\bin\Debug\haarcascade_frontalface_alt_tree.xml";
+
+                    //Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
+
+                    Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(path);
+                    if (!File.Exists(haarCascadeSettings))
+                    {
+                        return;
+                    }
+
+                    CascadeClassifier cascadeClassifier = new CascadeClassifier(haarCascadeSettings); // Application.StartupPath + 
+
+                    var grayframe = inpImg.Convert<Gray, byte>();
+
+                    var faces = cascadeClassifier.DetectMultiScale(grayframe, 1.1, 10, Size.Empty); //the actual face detection happens here
+
+                    foreach (var face in faces)
+                    {
+                        inpImg.Draw(face, new Bgr(Color.BurlyWood), 3); //the detected face(s) is highlighted here using a box that is drawn around it/them
+                    }
+
+                    if (this.waterImage != null) this.waterImage.Dispose();
+                    // Dump the image.
+                    this.waterImage = inpImg.ToBitmap();
+                    // Show the nwe mage.
+                    this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            });
+
+            workerThread.Start();
+        }
+
+        /// <summary>
+        /// Save the processed 3D image.
         /// </summary>
         private void SaveImage3D()
         {
@@ -410,7 +547,7 @@ namespace Androbot
         }
 
         /// <summary>
-        /// Save the processed image.
+        /// Save 2D image.
         /// </summary>
         private void SaveImage2D()
         {
@@ -431,6 +568,9 @@ namespace Androbot
             workerThread.Start();
         }
 
+        /// <summary>
+        /// Save processed water image.
+        /// </summary>
         private void SaveWaterImage()
         {
             if (this.waterImage == null)
@@ -1217,31 +1357,12 @@ namespace Androbot
             this.motionMode = MotionMode.Speed;
         }
 
+
         #endregion
 
-        private void btnProcessWater_Click(object sender, EventArgs e)
+        private void btnProcessFaces_Click(object sender, EventArgs e)
         {
-            this.ProcessWater();
-        }
-
-        private void save2DToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.SaveImage2D();
-        }
-
-        private void save3DToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.SaveImage3D();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void saveWaterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.SaveWaterImage();
+            this.ProcessFaces();
         }
     }
 }
