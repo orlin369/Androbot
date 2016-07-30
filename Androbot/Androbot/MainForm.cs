@@ -86,7 +86,7 @@ namespace Androbot
         /// <summary>
         /// Output processed Anaglyph image.
         /// </summary>
-        private Bitmap waterImage;
+        private Bitmap outputImage;
 
 
         private MotionMode motionMode = MotionMode.Positional;
@@ -277,9 +277,9 @@ namespace Androbot
             Application.Exit();
         }
 
-        private void saveWaterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveProcessedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.SaveWaterImage();
+            this.SaveProcessedImage();
         }
 
         private void btnProcessRocks_Click(object sender, EventArgs e)
@@ -417,11 +417,11 @@ namespace Androbot
                 }
 
 
-                if (this.waterImage != null) this.waterImage.Dispose();
+                if (this.outputImage != null) this.outputImage.Dispose();
                 // Dump the image.
-                this.waterImage = inpImg.ToBitmap();
+                this.outputImage = inpImg.ToBitmap();
                 // Show the nwe mage.
-                this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
+                this.pbMain.Image = this.FitImage(this.outputImage, this.pbMain.Size);
             });
             workerThread.Start();
         }
@@ -466,11 +466,11 @@ namespace Androbot
                     }
                 }
                 
-                if (this.waterImage != null) this.waterImage.Dispose();
+                if (this.outputImage != null) this.outputImage.Dispose();
                 // Dump the image.
-                this.waterImage = inpImg.ToBitmap();
+                this.outputImage = inpImg.ToBitmap();
                 // Show the nwe mage.
-                this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
+                this.pbMain.Image = this.FitImage(this.outputImage, this.pbMain.Size);
             });
 
             workerThread.Start();
@@ -488,7 +488,7 @@ namespace Androbot
                 try
                 {
                     string path = @"C:\Users\POLYGONTeam\Documents\GitHub\Androbot\Androbot\Androbot\bin\Debug\Images\2D_20160728170254.PNG";
-                    string haarCascadeSettings = @"C:\Users\POLYGONTeam\Documents\GitHub\Androbot\Androbot\Androbot\bin\Debug\haarcascade_frontalface_alt_tree.xml";
+                    string haarCascadeSettings = @"C:\Users\POLYGONTeam\.nuget\packages\EmguCV.221.x64\1.5.0\haarcascades\haarcascade_frontalface_alt_tree.xml";
 
                     //Emgu.CV.Image<Bgr, byte> inpImg = new Emgu.CV.Image<Bgr, byte>(this.inputImage);
 
@@ -509,11 +509,12 @@ namespace Androbot
                         inpImg.Draw(face, new Bgr(Color.BurlyWood), 3); //the detected face(s) is highlighted here using a box that is drawn around it/them
                     }
 
-                    if (this.waterImage != null) this.waterImage.Dispose();
+                    if (this.outputImage != null) this.outputImage.Dispose();
                     // Dump the image.
-                    this.waterImage = inpImg.ToBitmap();
+                    this.outputImage = inpImg.ToBitmap();
+
                     // Show the nwe mage.
-                    this.pbMain.Image = this.FitImage(this.waterImage, this.pbMain.Size);
+                    this.pbMain.Image = this.FitImage(this.outputImage, this.pbMain.Size);
                 }
                 catch(Exception e)
                 {
@@ -571,9 +572,9 @@ namespace Androbot
         /// <summary>
         /// Save processed water image.
         /// </summary>
-        private void SaveWaterImage()
+        private void SaveProcessedImage()
         {
-            if (this.waterImage == null)
+            if (this.outputImage == null)
             {
                 return;
             }
@@ -584,7 +585,7 @@ namespace Androbot
                 string tmpPath = String.Format(@"2D_WATER_{0}.PNG", DateTime.Now.ToString("yyyyMMddHHmmss"));
                 tmpPath = Path.Combine(this.imagePath, tmpPath);
                 // Save the image.
-                this.waterImage.Save(tmpPath);
+                this.outputImage.Save(tmpPath);
             });
 
             workerThread.Start();
